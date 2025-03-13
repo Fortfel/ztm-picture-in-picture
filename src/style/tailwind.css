@@ -1,0 +1,22 @@
+/*@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');*/
+
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base); /* comment this line to disable preflight */
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@config '../../tailwind.config.ts';
+
+@theme {
+  /*--font-monstserrat: 'Montserrat', sans-serif;*/
+  /*--max-width-container: 85rem;*/
+  /*--font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";*/
+  /*--font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;*/
+  /*--font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;*/
+
+  /*--breakpoint-sm: 40rem; !* 640px *!*/
+  /*--breakpoint-md: 48rem; !* 768px *!*/
+  /*--breakpoint-lg: 64rem; !* 1024px *!*/
+  /*--breakpoint-xl: 80rem; !* 1280px *!*/
+  /*--breakpoint-2xl: 96rem; !* 1536px *!*/
+}

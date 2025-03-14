@@ -1,7 +1,5 @@
 import '@/style/tailwind.css'
-import { throwIfNull, tw } from '@/_utility'
-
-//TODO[fortf] README
+import { throwIfNull } from '@/_utility'
 
 /**
  * Represents references to DOM elements used in the application.
@@ -9,69 +7,74 @@ import { throwIfNull, tw } from '@/_utility'
 type DomReferences = Readonly<{
   /** Reference to the main application container element. */
   app: HTMLElement
-}>
-
-/**
- * Options for configuring the application.
- */
-type Options = Readonly<{
-  attempts: number
-}>
-
-/**
- * Configuration parameters for the application.
- */
-type Parameters = Readonly<{
-  /** Optional configuration options for the application. */
-  options: Partial<Options>
+  /** Reference to the video element. */
+  video: HTMLVideoElement
+  /** Reference to the start button element. */
+  button: HTMLButtonElement
 }>
 
 class App {
-  //TODO[fortf] use WeakMap for eventlisteners?
-  //TODO[fortf] add compose and pipe to utilities / usage with arr.reduce
   public readonly domRefs: DomReferences
-  private readonly options: Options
-  private readonly defaultOptions = {
-    attempts: 5,
-  } as const satisfies Options
 
   /**
    * Creates a new instance of the application.
-   * @param options - Optional configuration for the application.
    */
-  constructor({ options }: Parameters = { options: {} }) {
-    this.options = { ...this.defaultOptions, ...options }
+  constructor() {
     this.domRefs = this.initDomRefs()
 
     this.initialize()
-    const div = document.createElement('div')
-    div.className = 'bg-stripes-fuchsia-500 font-sans'
-    div.innerText = 'KEK'
-    this.domRefs.app.appendChild(div)
   }
 
   /**
    * Initializes the DOM references for the application.
-   * @throws Error if the app element is not found.
+   * @throws Error if any of the DOM elements are not found.
    * @returns An object containing references to DOM elements.
    */
   private initDomRefs(): DomReferences {
     const app = throwIfNull(document.querySelector<HTMLElement>('#app'), 'App element not found')
+    const video = throwIfNull(document.querySelector<HTMLVideoElement>('#video'), 'Video element not found')
+    const button = throwIfNull(document.querySelector<HTMLButtonElement>('#start'), 'Start button element not found')
 
     return Object.freeze({
       app,
+      video,
+      button,
     })
   }
 
   private initialize(): void {
-    this.setupBodyClass()
+    void this.selectMediaStream()
+    this.bindEvents()
+  }
+
+  private bindEvents(): void {
+    this.domRefs.button.addEventListener('click', () => {
+      this.domRefs.button.disabled = true
+      this.domRefs.video
+        .requestPictureInPicture()
+        .then(() => {
+          this.domRefs.button.disabled = false
+        })
+        .catch((reason: unknown) => {
+          console.error(reason)
+          this.domRefs.button.disabled = false
+        })
+    })
   }
 
   /**
-   * Sets up the body class.
+   * Selects a media stream and plays it in the video element.
+   * @returns A Promise that resolves when the media stream is selected and played.
    */
-  private setupBodyClass(): void {
-    document.body.classList.add(...tw`min-h-screen bg-slate-900 text-slate-400 antialiased`.split(' '))
+  private async selectMediaStream(): Promise<void> {
+    try {
+      this.domRefs.video.srcObject = await navigator.mediaDevices.getDisplayMedia({ video: true })
+      this.domRefs.video.onloadedmetadata = async (): Promise<void> => {
+        await this.domRefs.video.play()
+      }
+    } catch (error) {
+      console.log('Failed to get media stream', error)
+    }
   }
 }
 

@@ -3,11 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
+    <title>Picture in Picture</title>
     <link rel="icon" type="image/png" href="https://www.google.com/s2/favicons?domain=www.fortfel.com" />
   </head>
-  <body>
-    <div id="app"></div>
+  <body class="m-0 flex min-h-screen items-center justify-center bg-[#202020] text-[#ced0d6] antialiased">
+    <div id="app">
+      <!-- Video -->
+      <video src="" id="video" controls class="hidden w-xl"></video>
+      <div>
+        <button
+          type="button"
+          id="start"
+          class="w-32 cursor-pointer rounded-md bg-emerald-600 px-5 py-2.5 text-lg font-semibold text-white shadow-[inset_0_20px_4px_-19px_rgba(255,255,255,0.7)] hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 disabled:opacity-50 disabled:hover:bg-emerald-600"
+        >
+          <span class="shadow-text-md">START</span>
+        </button>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts" defer></script>
   </body>
 </html>
